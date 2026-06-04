@@ -6,41 +6,46 @@ from browser_forensics.downloads_history import extract_download_history
 from timeline.timeline_engine import build_timeline
 from reporting.report_exporter import export_report
 from risk_engine.risk_scoring import calculate_risk
+
 file_path = input("Enter file path: ")
 
+# Analysis
 hash_results = calculate_hashes(file_path)
 metadata_results = get_file_metadata(file_path)
 analysis_results = analyze_file(file_path)
-
 risk_results = calculate_risk(file_path)
 
+# Browser artifacts
 history_data = extract_chrome_history()
 download_data = extract_download_history()
 
-timeline_df = build_timeline(metadata_results, history_data, download_data)
+# Timeline
+timeline_df = build_timeline(
+    metadata_results,
+    history_data,
+    download_data
+)
 
+# HASH REPORT
 print("\n--- FORENSIC HASH REPORT ---\n")
 
 for key, value in hash_results.items():
     print(f"{key}: {value}")
 
+# METADATA REPORT
 print("\n--- FILE METADATA REPORT ---\n")
 
 for key, value in metadata_results.items():
     print(f"{key}: {value}")
 
-    print("\n--- SUSPICIOUS FILE ANALYSIS ---\n")
-
-analysis_results = analyze_file(file_path)
-
-for item in analysis_results:
-    print(f"[!] {item}")
-
+# SUSPICIOUS ANALYSIS
+print("\n--- SUSPICIOUS FILE ANALYSIS ---\n")
 
 for item in analysis_results:
     print(f"[!] {item}")
 
-    print("\n--- RISK ASSESSMENT ---\n")
+# RISK ASSESSMENT
+print("\n--- RISK ASSESSMENT ---\n")
 
 print(f"Risk Score : {risk_results['Risk Score']}")
 print(f"Risk Level : {risk_results['Risk Level']}")
@@ -53,28 +58,19 @@ if risk_results["Findings"]:
 else:
     print("No risk indicators detected")
 
-    print("\n--- CHROME HISTORY FORENSICS ---\n")
-
-history_data = extract_chrome_history()
-
+# CHROME HISTORY
+print("\n--- CHROME HISTORY FORENSICS ---\n")
 print(history_data)
 
+# DOWNLOAD FORENSICS
 print("\n--- DOWNLOAD FORENSICS ---\n")
-
-download_data = extract_download_history()
-
 print(download_data)
 
+# TIMELINE
 print("\n--- FORENSIC TIMELINE RECONSTRUCTION ---\n")
-
-timeline_df = build_timeline(
-    metadata_results,
-    history_data,
-    download_data
-)
-
 print(timeline_df)
 
+# EXPORT REPORTS
 print("\n--- EXPORTING REPORTS ---\n")
 
 timeline_export = export_report(

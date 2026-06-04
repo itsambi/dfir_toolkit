@@ -2,6 +2,7 @@ import os
 import shutil
 import sqlite3
 import pandas as pd
+from utils.timestamp_converter import chrome_time_to_datetime
 
 def extract_chrome_history():
 
@@ -32,7 +33,9 @@ def extract_chrome_history():
         """
 
         df = pd.read_sql_query(query, connection)
+        df["last_visit_time"] = df["last_visit_time"].apply(chrome_time_to_datetime)
 
+    
         connection.close()
 
         os.remove(temp_history)

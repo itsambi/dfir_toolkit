@@ -2,6 +2,7 @@ import os
 import shutil
 import sqlite3
 import pandas as pd
+from utils.timestamp_converter import chrome_time_to_datetime
 
 def extract_download_history():
 
@@ -30,6 +31,7 @@ def extract_download_history():
         """
 
         df = pd.read_sql_query(query, connection)
+        df["start_time"] = df["start_time"].apply(chrome_time_to_datetime)
 
         connection.close()
 
