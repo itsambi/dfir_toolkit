@@ -6,6 +6,7 @@ from browser_forensics.downloads_history import extract_download_history
 from timeline.timeline_engine import build_timeline
 from reporting.report_exporter import export_report
 from risk_engine.risk_scoring import calculate_risk
+from ioc_detection.ioc_detector import detect_iocs
 
 file_path = input("Enter file path: ")
 
@@ -14,6 +15,7 @@ hash_results = calculate_hashes(file_path)
 metadata_results = get_file_metadata(file_path)
 analysis_results = analyze_file(file_path)
 risk_results = calculate_risk(file_path)
+ioc_results = detect_iocs(file_path)
 
 # Browser artifacts
 history_data = extract_chrome_history()
@@ -57,6 +59,11 @@ if risk_results["Findings"]:
         print(f"[!] {finding}")
 else:
     print("No risk indicators detected")
+
+    print("\n--- IOC DETECTION REPORT ---\n")
+
+for item in ioc_results:
+    print(f"[IOC] {item}")
 
 # CHROME HISTORY
 print("\n--- CHROME HISTORY FORENSICS ---\n")
