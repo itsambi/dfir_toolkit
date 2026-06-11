@@ -73,4 +73,4 @@ def build_timeline(metadata_results, history_df, downloads_df):
 
     timeline_df = pd.DataFrame(timeline)
 
-    return timeline_dfp
+    return timeline_df
