@@ -7,6 +7,7 @@ from timeline.timeline_engine import build_timeline
 from reporting.report_exporter import export_report
 from risk_engine.risk_scoring import calculate_risk
 from ioc_detection.ioc_detector import detect_iocs
+from ai_assistant.incident_summarizer import generate_incident_summary
 
 file_path = input("Enter file path: ")
 
@@ -26,6 +27,13 @@ timeline_df = build_timeline(
     metadata_results,
     history_data,
     download_data
+)
+
+incident_summary = generate_incident_summary(
+    risk_results,
+    ioc_results,
+    timeline_df,
+    metadata_results
 )
 
 # HASH REPORT
@@ -76,6 +84,9 @@ print(download_data)
 # TIMELINE
 print("\n--- FORENSIC TIMELINE RECONSTRUCTION ---\n")
 print(timeline_df)
+
+print("\n--- AI INCIDENT SUMMARY ---\n")
+print(incident_summary)
 
 # EXPORT REPORTS
 print("\n--- EXPORTING REPORTS ---\n")
