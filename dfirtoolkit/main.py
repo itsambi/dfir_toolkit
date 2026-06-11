@@ -8,6 +8,7 @@ from reporting.report_exporter import export_report
 from risk_engine.risk_scoring import calculate_risk
 from ioc_detection.ioc_detector import detect_iocs
 from ai_assistant.incident_summarizer import generate_incident_summary
+from ai_assistant.forensic_copilot import answer_question
 
 file_path = input("Enter file path: ")
 
@@ -87,6 +88,22 @@ print(timeline_df)
 
 print("\n--- AI INCIDENT SUMMARY ---\n")
 print(incident_summary)
+
+print("\n--- FORENSIC COPILOT ---\n")
+
+question = input(
+    "Ask Investigator: "
+)
+
+answer = answer_question(
+    question,
+    risk_results,
+    ioc_results,
+    metadata_results
+)
+
+print("\n")
+print(answer)
 
 # EXPORT REPORTS
 print("\n--- EXPORTING REPORTS ---\n")
