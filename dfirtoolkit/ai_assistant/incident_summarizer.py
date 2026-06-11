@@ -20,7 +20,6 @@ def generate_incident_summary(
     )
 
     report.append("")
-
     report.append("Evidence Identified:")
 
     for item in ioc_results:
@@ -32,45 +31,61 @@ def generate_incident_summary(
     )
 
     report.append("")
-
     report.append("Assessment:")
 
     if risk_score >= 60:
-
         report.append(
             "The file exhibits characteristics commonly associated with suspicious or potentially malicious activity."
         )
 
     elif risk_score >= 30:
-
         report.append(
-            "The file contains several indicators that warrant additional review."
+            "The file contains indicators that warrant further review."
         )
 
     else:
-
         report.append(
             "No major indicators of malicious activity were identified."
         )
 
     report.append("")
-
     report.append("Recommended Actions:")
 
-    report.append(
-        "1. Preserve the file as evidence."
+    recommendations = []
+
+    for item in ioc_results:
+
+        item_lower = item.lower()
+
+        if "double extension" in item_lower:
+            recommendations.append(
+                "Investigate possible phishing or masquerading techniques."
+            )
+
+        if ".exe" in item_lower:
+            recommendations.append(
+                "Review process execution logs for executable activity."
+            )
+
+        if "powershell" in item_lower:
+            recommendations.append(
+                "Inspect PowerShell command history."
+            )
+
+    if risk_score >= 60:
+        recommendations.append(
+            "Consider isolating the affected endpoint."
+        )
+
+    recommendations.append(
+        "Preserve evidence for further investigation."
     )
 
-    report.append(
-        "2. Review execution history."
-    )
+    recommendations = list(set(recommendations))
 
-    report.append(
-        "3. Investigate related downloads."
-    )
-
-    report.append(
-        "4. Review browser activity."
-    )
+    for index, recommendation in enumerate(recommendations, start=1):
+        report.append(
+            f"{index}. {recommendation}"
+        )
 
     return "\n".join(report)
